@@ -55,17 +55,36 @@ export function Home({ ctx }: RequestInfo) {
       </p>
 
       <h2>API Usage</h2>
-      <code
-        style={{
-          background: "#f5f5f5",
-          padding: "0.5rem",
-          borderRadius: "4px",
-          display: "block",
-          margin: "1rem 0",
-        }}
-      >
-        /avatar/[input]?vibe=[vibe]&size=[size]
-      </code>
+      <div style={{ marginBottom: "2rem" }}>
+        <h3 style={{ fontSize: "1rem", marginBottom: "0.5rem" }}>Standard Vibes</h3>
+        <code
+          style={{
+            background: "#f5f5f5",
+            padding: "0.5rem",
+            borderRadius: "4px",
+            display: "block",
+            margin: "0.5rem 0",
+          }}
+        >
+          /[input]?vibe=[vibe]&size=[size]
+        </code>
+        
+        <h3 style={{ fontSize: "1rem", marginBottom: "0.5rem", marginTop: "1rem" }}>Custom Color Palette</h3>
+        <code
+          style={{
+            background: "#f5f5f5",
+            padding: "0.5rem",
+            borderRadius: "4px",
+            display: "block",
+            margin: "0.5rem 0",
+          }}
+        >
+          /[hex]/[input]?size=[size]
+        </code>
+        <p style={{ fontSize: "0.9rem", color: "#666", margin: "0.5rem 0" }}>
+          Generate avatars based on your brand colors! Use any 6-character hex color (without #).
+        </p>
+      </div>
 
       <h2>Demo Avatars</h2>
       <div
@@ -91,13 +110,12 @@ export function Home({ ctx }: RequestInfo) {
               {VIBES.map((vibe) => (
                 <div key={vibe} style={{ textAlign: "center" }}>
                   <img
-                    src={`/avatar/${encodeURIComponent(
-                      input
-                    )}?vibe=${vibe}&size=64`}
+                    src={`/${encodeURIComponent(input)}?vibe=${vibe}&size=64`}
                     alt={`${input} - ${vibe}`}
                     style={{
                       width: "64px",
                       height: "64px",
+                      borderRadius: "50%",
                     }}
                   />
                   <div
@@ -141,21 +159,58 @@ export function Home({ ctx }: RequestInfo) {
       </div>
 
       <h2>Examples</h2>
-      <ul style={{ marginTop: "1rem" }}>
-        <li>
-          <a href="/avatar/taylor@laravel.com">/avatar/taylor@laravel.com</a>
-        </li>
-        <li>
-          <a href="/avatar/taylor@laravel.com?vibe=ocean">
-            /avatar/taylor@laravel.com?vibe=ocean
-          </a>
-        </li>
-        <li>
-          <a href="/avatar/user123?vibe=sunset&size=128">
-            /avatar/user123?vibe=sunset&size=128
-          </a>
-        </li>
-      </ul>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "2rem", marginTop: "1rem" }}>
+        <div>
+          <h3 style={{ fontSize: "1rem", marginBottom: "0.5rem" }}>Standard Vibes</h3>
+          <ul>
+            <li>
+              <a href="/taylor@laravel.com">/taylor@laravel.com</a>
+            </li>
+            <li>
+              <a href="/taylor@laravel.com?vibe=ocean">
+                /taylor@laravel.com?vibe=ocean
+              </a>
+            </li>
+            <li>
+              <a href="/user123?vibe=sunset&size=128">
+                /user123?vibe=sunset&size=128
+              </a>
+            </li>
+          </ul>
+        </div>
+        
+        <div>
+          <h3 style={{ fontSize: "1rem", marginBottom: "0.5rem" }}>Custom Color Palettes</h3>
+          <ul>
+            <li>
+              <a href="/FF0000/user123">/FF0000/user123</a> (Red-based)
+            </li>
+            <li>
+              <a href="/0066CC/user123">/0066CC/user123</a> (Blue-based)
+            </li>
+            <li>
+              <a href="/00AA44/user123?size=128">/00AA44/user123?size=128</a> (Green-based)
+            </li>
+          </ul>
+        </div>
+      </div>
+      
+      <h2>Custom Palette Examples</h2>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))", gap: "1rem", marginTop: "1rem" }}>
+        {["FF0000", "0066CC", "00AA44", "FF6600", "9933CC"].map((hex) => (
+          <div key={hex} style={{ textAlign: "center" }}>
+            <div style={{ marginBottom: "0.5rem" }}>
+              <div style={{ width: "20px", height: "20px", backgroundColor: `#${hex}`, display: "inline-block", borderRadius: "3px", marginRight: "0.5rem" }}></div>
+              <code style={{ fontSize: "0.8rem" }}>#{hex}</code>
+            </div>
+            <img 
+              src={`/${hex}/demo?size=64`}
+              alt={`${hex} palette`}
+              style={{ width: "64px", height: "64px", borderRadius: "50%" }}
+            />
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

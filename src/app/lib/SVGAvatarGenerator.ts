@@ -23,6 +23,98 @@ export class SVGAvatarGenerator {
     return VIBES[vibe as keyof typeof VIBES] || VIBES.sunset;
   }
 
+  private generatePaletteFromHex(baseHex: string, rng: () => number): string[] {
+    // Ensure hex starts with #
+    const hex = baseHex.startsWith('#') ? baseHex : `#${baseHex}`;
+    
+    // Parse RGB values
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+    
+    // Convert to HSL for easier manipulation
+    const hsl = this.rgbToHsl(r, g, b);
+    const [h, s, l] = hsl;
+    
+    // Generate 4 related colors with variations
+    const colors = [];
+    
+    // Base color
+    colors.push(hex);
+    
+    // Lighter version
+    const lighterL = Math.min(1, l + 0.15 + rng() * 0.1);
+    colors.push(this.hslToHex(h, s, lighterL));
+    
+    // Darker version
+    const darkerL = Math.max(0, l - 0.15 - rng() * 0.1);
+    colors.push(this.hslToHex(h, s, darkerL));
+    
+    // Complementary hue variation
+    const compH = (h + 0.15 + rng() * 0.3) % 1;
+    const compS = Math.max(0.3, s - 0.1 + rng() * 0.2);
+    colors.push(this.hslToHex(compH, compS, l));
+    
+    return colors;
+  }
+  
+  private rgbToHsl(r: number, g: number, b: number): [number, number, number] {
+    r /= 255;
+    g /= 255;
+    b /= 255;
+    
+    const max = Math.max(r, g, b);
+    const min = Math.min(r, g, b);
+    const diff = max - min;
+    
+    let h = 0;
+    let s = 0;
+    const l = (max + min) / 2;
+    
+    if (diff !== 0) {
+      s = l > 0.5 ? diff / (2 - max - min) : diff / (max + min);
+      
+      switch (max) {
+        case r: h = (g - b) / diff + (g < b ? 6 : 0); break;
+        case g: h = (b - r) / diff + 2; break;
+        case b: h = (r - g) / diff + 4; break;
+      }
+      h /= 6;
+    }
+    
+    return [h, s, l];
+  }
+  
+  private hslToHex(h: number, s: number, l: number): string {
+    const hue2rgb = (p: number, q: number, t: number) => {
+      if (t < 0) t += 1;
+      if (t > 1) t -= 1;
+      if (t < 1/6) return p + (q - p) * 6 * t;
+      if (t < 1/2) return q;
+      if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+      return p;
+    };
+    
+    let r, g, b;
+    
+    if (s === 0) {
+      r = g = b = l; // achromatic
+    } else {
+      const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+      const p = 2 * l - q;
+      r = hue2rgb(p, q, h + 1/3);
+      g = hue2rgb(p, q, h);
+      b = hue2rgb(p, q, h - 1/3);
+    }
+    
+    const toHex = (c: number) => {
+      const hex = Math.round(c * 255).toString(16);
+      return hex.length === 1 ? '0' + hex : hex;
+    };
+    
+    return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+  }
+
   private hexToRgba(hex: string, alpha: number): string {
     const r = parseInt(hex.slice(1, 3), 16);
     const g = parseInt(hex.slice(3, 5), 16);
@@ -80,10 +172,12 @@ export class SVGAvatarGenerator {
     return gradients;
   }
 
-  public generate(input: string, vibe: string = 'sunset', size: number = 256): string {
+  public generate(input: string, vibe: string = 'sunset', size: number = 256, baseHex?: string): string {
     const seed = this.hashInput(input);
     const rng = this.createSeededRNG(seed);
-    const colors = this.getVibeColors(vibe);
+    
+    // Use hex-based palette if provided, otherwise use vibe colors
+    const colors = baseHex ? this.generatePaletteFromHex(baseHex, rng) : this.getVibeColors(vibe);
     
     const gradients = this.generateSmoothGradients(rng, colors);
     
@@ -104,7 +198,7 @@ export class SVGAvatarGenerator {
     // Create fills with soft blending
     const gradientFills = gradients.map((grad, index) => {
       const blendMode = index === 0 ? 'normal' : index % 2 === 1 ? 'multiply' : 'overlay';
-      return `<circle cx="${size/2}" cy="${size/2}" r="${size/2}" fill="url(#${grad.id})" style="mix-blend-mode: ${blendMode}" />`;
+      return `<rect x="0" y="0" width="${size}" height="${size}" fill="url(#${grad.id})" style="mix-blend-mode: ${blendMode}" />`;
     }).join('');
     
     const svg = `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg">
@@ -118,7 +212,7 @@ export class SVGAvatarGenerator {
   </defs>
   
   <!-- Base layer -->
-  <circle cx="${size/2}" cy="${size/2}" r="${size/2}" fill="url(#base)" />
+  <rect x="0" y="0" width="${size}" height="${size}" fill="url(#base)" />
   
   <!-- Smooth gradient layers -->
   ${gradientFills}
