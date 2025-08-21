@@ -6,6 +6,19 @@ import { Home } from "@/app/pages/Home";
 import { setCommonHeaders } from "@/app/headers";
 import { SVGAvatarGenerator } from "@/app/lib/SVGAvatarGenerator";
 
+// Helper function to parse avatar parameters from request
+function parseAvatarParams(request: Request) {
+  const url = new URL(request.url);
+  const vibe = url.searchParams.get("vibe") || "sunset";
+  const size = parseInt(url.searchParams.get("size") || "256");
+  const vibesParam = url.searchParams.get("vibes");
+  
+  // Parse custom colors from vibes parameter
+  const customColors = vibesParam ? vibesParam.split(',').map(c => c.trim()) : undefined;
+  
+  return { vibe, size, customColors };
+}
+
 export type AppContext = {};
 
 export default defineApp([
@@ -18,14 +31,7 @@ export default defineApp([
     route("/", Home),
     route("/:base/:seed", ({ request, params }) => {
       const { base, seed } = params;
-
-      const url = new URL(request.url);
-      const vibe = url.searchParams.get("vibe") || "sunset";
-      const size = parseInt(url.searchParams.get("size") || "256");
-      const vibesParam = url.searchParams.get("vibes");
-      
-      // Parse custom colors from vibes parameter
-      const customColors = vibesParam ? vibesParam.split(',').map(c => c.trim()) : undefined;
+      const { vibe, size, customColors } = parseAvatarParams(request);
 
       const generator = new SVGAvatarGenerator();
       const svg = generator.generate(seed, vibe, size, base, customColors);
@@ -40,13 +46,7 @@ export default defineApp([
     }),
     route("/:seed", ({ request, params }) => {
       const input = params.seed;
-      const url = new URL(request.url);
-      const vibe = url.searchParams.get("vibe") || "sunset";
-      const size = parseInt(url.searchParams.get("size") || "256");
-      const vibesParam = url.searchParams.get("vibes");
-      
-      // Parse custom colors from vibes parameter
-      const customColors = vibesParam ? vibesParam.split(',').map(c => c.trim()) : undefined;
+      const { vibe, size, customColors } = parseAvatarParams(request);
 
       const generator = new SVGAvatarGenerator();
       const svg = generator.generate(input, vibe, size, undefined, customColors);
