@@ -172,12 +172,19 @@ export class SVGAvatarGenerator {
     return gradients;
   }
 
-  public generate(input: string, vibe: string = 'sunset', size: number = 256, baseHex?: string): string {
+  public generate(input: string, vibe: string = 'sunset', size: number = 256, baseHex?: string, customColors?: string[]): string {
     const seed = this.hashInput(input);
     const rng = this.createSeededRNG(seed);
     
-    // Use hex-based palette if provided, otherwise use vibe colors
-    const colors = baseHex ? this.generatePaletteFromHex(baseHex, rng) : this.getVibeColors(vibe);
+    // Priority: custom colors > hex-based palette > vibe colors
+    let colors: string[];
+    if (customColors && customColors.length > 0) {
+      colors = customColors.map(color => color.startsWith('#') ? color : `#${color}`);
+    } else if (baseHex) {
+      colors = this.generatePaletteFromHex(baseHex, rng);
+    } else {
+      colors = this.getVibeColors(vibe);
+    }
     
     const gradients = this.generateSmoothGradients(rng, colors);
     
