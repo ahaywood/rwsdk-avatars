@@ -22,12 +22,19 @@ export function Home({ ctx }: RequestInfo) {
 
   return (
     <main>
+      {/* GITHUB CORNER */}
       <a href={CONSTANTS.BASE_URL}>
         <img
           src="/images/github-corner.svg"
           alt="GitHub"
           className="github-corner"
         />
+      </a>
+
+      {/* RWSDK AD */}
+      <a className="ad" href={CONSTANTS.RWSDK} target="_blank">
+        <p>Built with</p>
+        <img src="/images/sdk-logo.svg" alt="RWSDK" width="150" />
       </a>
 
       <div>

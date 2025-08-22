@@ -9,11 +9,14 @@ export const Document: React.FC<{ children: React.ReactNode }> = ({
       <meta name="viewport" content="width=device-width, initial-scale=1" />
       <title>RWSDK Avatars</title>
 
-      {/* TODO: Add a Favicon */}
+      <link rel="icon" href="/favicon.png" type="image/png" />
 
       {/* TODO: Add Open Graph Tags */}
 
-      {/* TODO: Add Meta Description */}
+      <meta
+        name="description"
+        content="Generate beautiful, deterministic gradient mesh avatars with customizable color palettes. Free API with 29+ vibes, custom hex colors, and SVG output. Perfect for user profiles and branding."
+      />
 
       <link rel="stylesheet" href={styles} />
 
@@ -31,6 +34,11 @@ export const Document: React.FC<{ children: React.ReactNode }> = ({
       <link rel="modulepreload" href="/src/client.tsx" />
 
       {/* FATHOM ANALYTICS */}
+      <script
+        src="https://cdn.usefathom.com/script.js"
+        data-site="DPWFPXGI"
+        defer
+      ></script>
     </head>
     <body>
       <div id="root">{children}</div>
