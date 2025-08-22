@@ -4,13 +4,14 @@ export const VIBES = {
   ocean: ["#3742fa", "#2f3542", "#40739e", "#487eb0"],
   daybreak: ["#ffa726", "#ffcc02", "#ff7043", "#ec407a"],
   bubble: ["#a29bfe", "#fd79a8", "#fdcb6e", "#6c5ce7"],
-  forest: ["#00b894", "#00cec9", "#55a3ff", "#74b9ff"],
+  forest: ["#388e3c", "#66bb6a", "#81c784", "#a5d6a7"],
   fire: ["#e17055", "#d63031", "#fd79a8", "#fdcb6e"],
   crystal: ["#a29bfe", "#74b9ff", "#0984e3", "#6c5ce7"],
-  ice: ["#74b9ff", "#0984e3", "#00cec9", "#ddd"],
+  ice: ["#e3f2fd", "#90caf9", "#42a5f5", "#1976d2"],
   stealth: ["#2d3436", "#636e72", "#b2bec3", "#74b9ff"],
-  
+
   // Medium & Balanced
+  carribean: ["#00b894", "#00cec9", "#55a3ff", "#74b9ff"],
   autumn: ["#D2691E", "#CD853F", "#B8860B", "#A0522D"],
   coral: ["#FF7F7F", "#FF6347", "#FFA07A", "#F08080"],
   teal: ["#20B2AA", "#48CAE4", "#00CED1", "#5F9EA0"],
@@ -21,7 +22,7 @@ export const VIBES = {
   indigo: ["#6A5ACD", "#483D8B", "#4B0082", "#663399"],
   terracotta: ["#E2725B", "#CD5C5C", "#A0522D", "#8B4513"],
   seafoam: ["#7FCDCD", "#66CDAA", "#20B2AA", "#008B8B"],
-  
+
   // Soft & Muted
   pastel: ["#FFE5E5", "#E5F3FF", "#F0E5FF", "#E5FFE5"],
   cream: ["#FFF8DC", "#F5F5DC", "#FAEBD7", "#F0E68C"],
