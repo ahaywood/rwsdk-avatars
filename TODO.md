@@ -1,0 +1,4 @@
+- [ ] If no vibe is provided, use a random vibe, but base it on the seed
+- [ ] Tweak the vibes for the bold, medium, and soft vibes
+- [ ] Add a link to the GitHub repo
+- [ ] Add an "ad" in the bottom right for RWSDK
