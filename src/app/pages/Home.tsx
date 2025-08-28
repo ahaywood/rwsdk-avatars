@@ -50,13 +50,6 @@ export function Home({ ctx }: RequestInfo) {
             </div>
           </li>
           <li>
-            <img src={BASE_URL + "yolo"} alt="" className="avatar" />
-            <div>
-              {BASE_URL}
-              yolo
-            </div>
-          </li>
-          <li>
             <img src={BASE_URL + randomUuid} alt="" className="avatar" />
             <div>
               {BASE_URL}
