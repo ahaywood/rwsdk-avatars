@@ -9,13 +9,15 @@ import { SVGAvatarGenerator } from "@/app/lib/SVGAvatarGenerator";
 // Helper function to parse avatar parameters from request
 function parseAvatarParams(request: Request) {
   const url = new URL(request.url);
-  const vibe = url.searchParams.get("vibe") || "sunset";
+  const vibe = url.searchParams.get("vibe") || null; // Don't default to sunset anymore
   const size = parseInt(url.searchParams.get("size") || "256");
   const vibesParam = url.searchParams.get("vibes");
-  
+
   // Parse custom colors from vibes parameter
-  const customColors = vibesParam ? vibesParam.split(',').map(c => c.trim()) : undefined;
-  
+  const customColors = vibesParam
+    ? vibesParam.split(",").map((c) => c.trim())
+    : undefined;
+
   return { vibe, size, customColors };
 }
 
@@ -49,7 +51,13 @@ export default defineApp([
       const { vibe, size, customColors } = parseAvatarParams(request);
 
       const generator = new SVGAvatarGenerator();
-      const svg = generator.generate(input, vibe, size, undefined, customColors);
+      const svg = generator.generate(
+        input,
+        vibe,
+        size,
+        undefined,
+        customColors
+      );
 
       return new Response(svg, {
         headers: {

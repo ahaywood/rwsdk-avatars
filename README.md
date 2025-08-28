@@ -74,7 +74,7 @@ Specify exact colors for complete control:
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
 | `input` | string | - | Seed for avatar generation (username, email, UUID, etc.) |
-| `vibe` | string | `sunset` | Predefined color palette name |
+| `vibe` | string | *random* | Predefined color palette name (deterministically selected if not provided) |
 | `size` | number | `256` | Avatar size in pixels |
 | `vibes` | string | - | Comma-separated hex colors (with or without #) |
 | `hex` | string | - | Base hex color for palette generation (6 characters, no #) |
@@ -89,7 +89,15 @@ Specify exact colors for complete control:
 
 1. **Custom Colors** (`vibes` parameter) - Highest priority
 2. **Hex-Based Palette** (`/hex/input` format) - Medium priority
-3. **Predefined Vibes** (`vibe` parameter) - Fallback
+3. **Predefined Vibes** (`vibe` parameter) - If specified
+4. **Random Vibe Selection** - Deterministic fallback based on input
+
+## Deterministic Random Vibe Selection
+
+When no vibe, custom colors, or base hex color is provided, the system automatically selects a vibe from the 29 available options. The selection is:
+- **Deterministic**: Same input always gets the same vibe
+- **Evenly distributed**: Uses input hash to ensure good distribution across all vibes
+- **Consistent**: `user123` will always get the same random vibe across requests
 
 ## Usage Examples
 
